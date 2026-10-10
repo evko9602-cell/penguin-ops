@@ -1,0 +1,27 @@
+# First instal fastfetch
+# sudo apt install fastfetch
+# Then insert the text below into /home/$USER/.bashrc file at the end of it
+
+
+# ==========================================               │
+# CUSTOM PROMPT - Ubuntu / Bash                            │
+# ==========================================               │
+                                                           │
+__custom_prompt() {                                        │
+    local rc="$?"                                          │
+    local color reset                                      │
+                                                           │
+    if [ "$(id -u)" -eq 0 ]; then                          │
+        color='\[\e[1;31m\]'   # ROOT - red             │
+        reset='\[\e[0m\]'                                  │
+        PS1="${color}┌─(\[\e[1;33m\]\t${color})-(\[\e[1;36>│
+    else                                                   │
+        color='\[\e[1;32m\]'   # USER - green              │
+        reset='\[\e[0m\]'                                  │
+        PS1="${color}┌─(\[\e[1;33m\]\t${color})-(\[\e[1;36>│
+    fi                                                     │
+}                                                          │
+                                                           │
+PROMPT_COMMAND=__custom_prompt                             │
+                                                           │
+fastfetch   
