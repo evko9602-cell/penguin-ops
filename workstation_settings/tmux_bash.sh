@@ -1,0 +1,82 @@
+#!/bin/bash
+
+sudo apt update && sudo apt upgrade -y && sudo apt install tmux fastfetch
+
+cat << 'EOF' >>  ~/.bashrc
+
+
+# ==========================================
+# CUSTOM PROMPT - Ubuntu / Bash
+# ==========================================
+
+__custom_prompt() {
+    local rc="$?"
+    local color reset
+
+    if [ "$(id -u)" -eq 0 ]; then
+        color='\[\e[1;31m\]'   # ROOT - червен
+        reset='\[\e[0m\]'
+        PS1="${color}┌─(\[\e[1;33m\]\t${color})-(\[\e[1;36m\]\u${color})-(\[\e[1;35m\]\h${color})-(\[\e[1;34m\]\w${color})\n${color}└─ 🐧 ${reset}"
+    else
+        color='\[\e[1;32m\]'   # USER - зелен
+        reset='\[\e[0m\]'
+        PS1="${color}┌─(\[\e[1;33m\]\t${color})-(\[\e[1;36m\]\u${color})-(\[\e[1;35m\]\h${color})-(\[\e[1;34m\]\w${color})\n${color}└─ 🐧 ${reset}"
+    fi
+}
+
+PROMPT_COMMAND=__custom_prompt
+
+fastfetch
+
+export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "
+
+EOF
+
+
+cat << 'EOF' > ~/.tmux.conf
+
+# use C-a and C-l for prefix.
+set-option -g prefix C-a
+
+# Mouse Mode
+set -g mouse on
+
+# Use Alt-arrow keys without prefix key to switch panes
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
+
+# Set easier window split keys
+bind-key v split-window -h
+bind-key h split-window -v
+
+# Shift arrow to switch windows
+bind -n S-Left previous-window
+bind -n S-Right next-window
+
+# Easily reorder windows with CTRL+SHIFT+Arrow
+bind-key -n C-S-Left swap-window -t -1
+bind-key -n C-S-Right swap-window -t +1
+
+# Synchronize panes
+bind-key y set-window-option synchronize-panes\; display-message "synchronize mode toggled."
+
+# Theme
+set-window-option -g window-status-current-style bold,bg=blue,fg=colour234
+set-window-option -g window-status-style fg=colour35
+set -g window-status-activity-style bold,bg=colour234,fg=white
+set-option -g message-style bg=colour237,fg=colour231
+set-option -g pane-border-style fg=colour36
+set-option -g pane-active-border-style fg=colour35
+
+# Status Bar
+set -g status-justify centre
+set -g status-bg black
+set -g status-fg colour35
+set -g status-interval 60
+set -g status-left-length 50
+set -g status-left "#[bg=colour35] 💻 #[fg=colour234,bold] #H #[bg=colour34]#[bg=colour35,nobold]#[fg=colour234] [#S] \$tmux_target"
+set -g status-right '#[bg=colour35] 🕒 #[fg=colour234,bold]%H:%M '
+
+EOF
