@@ -1,0 +1,8 @@
+sudo apt update && sudo apt upgrade -y
+sudo apt install linux-headers-$(uname -r) build-essential ubuntu-drivers-common -y
+sudo apt install nvidia-driver-580-server nvidia-utils-580-server -y
+sudo reboot
+nvidia-smi
+
+dpkg -l | grep nvidia-utils-580-server
+sudo dkms status
